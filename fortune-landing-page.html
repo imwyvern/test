@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财富指引</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 16px;
+            color: #333;
+            background: linear-gradient(135deg, #F8F5E6 0%, #E3F2FD 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 0 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .banner-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .banner-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .danmaku-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .danmaku {
+            position: absolute;
+            color: #FF6B35;
+            font-weight: bold;
+            font-size: 16px;
+            white-space: nowrap;
+            text-shadow: 0 0 3px rgba(255, 255, 255, 0.8), 0 0 5px rgba(255, 255, 255, 0.8);
+            animation-name: danmaku-move;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+        
+        @keyframes danmaku-move {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(-100%);
+            }
+        }
+        
+        .auth-section {
+            position: relative;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 0 20px 25px 20px;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(42, 59, 77, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="3" fill="%232A3B4D" opacity="0.2"/></svg>');
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .floating-text {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #2A3B4D;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .certification-logos {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        
+        .certification-logo {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #2A3B4D;
+            font-weight: bold;
+            border: 1px solid rgba(42, 59, 77, 0.3);
+            width: 45%;
+            height: 40px;
+            text-align: center;
+        }
+        
+        .interaction-section {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            padding: 25px 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            margin: 0 20px;
+        }
+        
+        .main-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 20px;
+            color: #D4AF37;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 2px rgba(212, 175, 55, 0.3);
+            opacity: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2A3B4D;
+            font-weight: 500;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon .material-icons {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #D4AF37;
+            font-size: 20px;
+        }
+        
+        input[type="text"], select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #D4AF37;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #B8860B;
+            box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+        }
+        
+        .toggle-group {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .toggle-option {
+            width: 50%;
+            text-align: center;
+            padding: 12px 0;
+            border: 1px solid #D4AF37;
+            background: white;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+        }
+        
+        .toggle-option:first-child {
+            border-radius: 50px 0 0 50px;
+            border-right: none;
+        }
+        
+        .toggle-option:last-child {
+            border-radius: 0 50px 50px 0;
+            border-left: none;
+        }
+        
+        .toggle-option.active {
+            background: #D4AF37;
+            color: white;
+        }
+        
+        .taiji {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, white 50%, black 50%);
+            z-index: 2;
+            transition: transform 0.5s;
+        }
+        
+        .taiji::before, .taiji::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .taiji::before {
+            top: 2.5px;
+            left: 2.5px;
+            background: black;
+        }
+        
+        .taiji::after {
+            bottom: 2.5px;
+            right: 2.5px;
+            background: white;
+        }
+        
+        .time-wheel {
+            border: 1px solid #D4AF37;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .wheel-header {
+            display: flex;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .wheel-header div {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: rgba(212, 175, 55, 0.1);
+            color: #2A3B4D;
+            font-weight: 500;
+        }
+        
+        .wheel-slots {
+            display: flex;
+            height: 120px;
+            overflow: hidden;
+        }
+        
+        .wheel-column {
+            flex: 1;
+            overflow-y: scroll;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            border-right: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .wheel-column:last-child {
+            border-right: none;
+        }
+        
+        .wheel-column::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .wheel-item {
+            padding: 12px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .wheel-item.selected {
+            background: rgba(212, 175, 55, 0.15);
+            font-weight: bold;
+            color: #D4AF37;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 90%;
+            margin: 30px auto 0;
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(to right, #D4AF37, #B8860B);
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.97);
+        }
+        
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #D4AF37;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="container">
+        <div class="banner-container">
+            <img src="/api/placeholder/800/400" alt="古建筑水墨画" class="banner-image">
+            <div class="danmaku-container" id="danmaku-container">
+                <!-- Danmaku messages will be dynamically generated -->
+            </div>
+        </div>
+        
+        <div class="auth-section">
+            <div class="floating-text">
+                已为<span id="counter">2,831,467</span>人指引财富方向
+            </div>
+            <div class="certification-logos">
+                <div class="certification-logo">
+                    <span>中国易经学会</span>
+                </div>
+                <div class="certification-logo">
+                    <span>人工智能伦理委员会</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interaction-section">
+            <h1 class="main-title" id="main-title">心念所至 金石为开</h1>
+            
+            <form id="fortune-form">
+                <div class="form-group">
+                    <label>姓名</label>
+                    <div class="input-with-icon">
+                        <input type="text" id="name" placeholder="请输入您的姓名" pattern="[^\W_]+" required>
+                        <span class="material-icons">person</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>性别</label>
+                    <div class="toggle-group">
+                        <div class="toggle-option active" data-value="male">男</div>
+                        <div class="toggle-option" data-value="female">女</div>
+                        <div class="taiji"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>出生时间</label>
+                    <div class="time-wheel">
+                        <div class="wheel-header">
+                            <div>年</div>
+                            <div>月</div>
+                            <div>日</div>
+                            <div>时辰</div>
+                        </div>
+                        <div class="wheel-slots">
+                            <div class="wheel-column" id="year-column">
+                                <!-- Years will be dynamically generated -->
+                            </div>
+                            <div class="wheel-column" id="month-column">
+                                <!-- Months will be dynamically generated -->
+                            </div>
+                            <div class="wheel-column" id="day-column">
+                                <!-- Days will be dynamically generated -->
+                            </div>
+                            <div class="wheel-column" id="hour-column">
+                                <!-- Traditional Chinese hours will be dynamically generated -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" class="submit-btn" id="submit-btn">
+                    化解危机
+                    <span class="material-icons">auto_awesome</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particle background
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 30,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#D4AF37"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#D4AF37",
+                    "opacity": 0.2,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": true,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 0.6
+                        }
+                    },
+                    "push": {
+                        "particles_nb": 3
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+        
+        // Setup danmaku (scrolling text)
+        const danmakuTexts = [
+            "高额赔偿", "收入下滑", "婚姻变故", "子女压力", 
+            "名誉口碑", "牢狱官非", "连年亏损", "中年失业"
+        ];
+        
+        const danmakuContainer = document.getElementById('danmaku-container');
+        
+        // Create danmaku elements
+        danmakuTexts.forEach((text, index) => {
+            const danmaku = document.createElement('div');
+            danmaku.className = 'danmaku';
+            danmaku.textContent = text;
+            
+            // Set random position and animation duration
+            const topPosition = 10 + (index * 10) + Math.random() * 5;
+            const animDuration = 8 + Math.random() * 7;
+            const delay = Math.random() * 8;
+            
+            danmaku.style.top = `${topPosition}%`;
+            danmaku.style.animationDuration = `${animDuration}s`;
+            danmaku.style.animationDelay = `${delay}s`;
+            
+            danmakuContainer.appendChild(danmaku);
+        });
+        
+        // Fade in title text letter by letter
+        const mainTitle = document.getElementById('main-title');
+        const titleText = mainTitle.textContent;
+        mainTitle.textContent = '';
+        mainTitle.style.opacity = 1;
+        
+        setTimeout(() => {
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < titleText.length) {
+                    mainTitle.textContent += titleText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 150);
+        }, 500);
+        
+        // Counter animation
+        const counterElement = document.getElementById('counter');
+        const finalCount = parseInt(counterElement.textContent.replace(/,/g, ''));
+        let currentCount = finalCount - 100;
+        
+        const counterInterval = setInterval(() => {
+            currentCount += Math.ceil(Math.random() * 5);
+            if (currentCount >= finalCount) {
+                currentCount = finalCount;
+                clearInterval(counterInterval);
+            }
+            counterElement.textContent = currentCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }, 100);
+        
+        // Initialize time wheel
+        const yearColumn = document.getElementById('year-column');
+        const monthColumn = document.getElementById('month-column');
+        const dayColumn = document.getElementById('day-column');
+        const hourColumn = document.getElementById('hour-column');
+        
+        // Generate years (1960-2010)
+        for (let year = 1960; year <= 2010; year++) {
+            const yearItem = document.createElement('div');
+            yearItem.className = 'wheel-item';
+            yearItem.textContent = year;
+            if (year === 1985) yearItem.classList.add('selected');
+            yearColumn.appendChild(yearItem);
+        }
+        
+        // Generate months (1-12)
+        for (let month = 1; month <= 12; month++) {
+            const monthItem = document.createElement('div');
+            monthItem.className = 'wheel-item';
+            monthItem.textContent = month;
+            if (month === 6) monthItem.classList.add('selected');
+            monthColumn.appendChild(monthItem);
+        }
+        
+        // Generate days (1-31)
+        for (let day = 1; day <= 31; day++) {
+            const dayItem = document.createElement('div');
+            dayItem.className = 'wheel-item';
+            dayItem.textContent = day;
+            if (day === 15) dayItem.classList.add('selected');
+            dayColumn.appendChild(dayItem);
+        }
+        
+        // Generate traditional Chinese hours
+        const chineseHours = ['子时 (23-1)', '丑时 (1-3)', '寅时 (3-5)', '卯时 (5-7)', '辰时 (7-9)', 
+                             '巳时 (9-11)', '午时 (11-13)', '未时 (13-15)', '申时 (15-17)', 
+                             '酉时 (17-19)', '戌时 (19-21)', '亥时 (21-23)'];
+        
+        chineseHours.forEach((hour, index) => {
+            const hourItem = document.createElement('div');
+            hourItem.className = 'wheel-item';
+            hourItem.textContent = hour;
+            if (index === 5) hourItem.classList.add('selected');
+            hourColumn.appendChild(hourItem);
+        });
+        
+        // Scroll to middle of wheel to show selected items
+        yearColumn.scrollTop = 25 * (1985 - 1960);
+        monthColumn.scrollTop = 25 * 5;
+        dayColumn.scrollTop = 25 * 14;
+        hourColumn.scrollTop = 25 * 5;
+        
+        // Toggle gender
+        const toggleOptions = document.querySelectorAll('.toggle-option');
+        const taiji = document.querySelector('.taiji');
+        let activeGender = 'male';
+        
+        toggleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                toggleOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                activeGender = option.dataset.value;
+                
+                if (activeGender === 'female') {
+                    taiji.style.transform = 'translate(-50%, -50%) rotate(180deg)';
+                } else {
+                    taiji.style.transform = 'translate(-50%, -50%)';
+                }
+            });
+        });
+        
+        // Name input validation
+        const nameInput = document.getElementById('name');
+        nameInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^\p{L}\p{M}\p{N}]/gu, '');
+        });
+        
+        // Wheel item selection
+        document.querySelectorAll('.wheel-column').forEach(column => {
+            column.addEventListener('scroll', () => {
+                const items = column.querySelectorAll('.wheel-item');
+                const columnHeight = column.offsetHeight;
+                const itemHeight = items[0].offsetHeight;
+                
+                items.forEach(item => item.classList.remove('selected'));
+                
+                const selectedIndex = Math.round(column.scrollTop / itemHeight);
+                if (items[selectedIndex]) {
+                    items[selectedIndex].classList.add('selected');
+                }
+            });
+        });
+        
+        // Submit button particle effect
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.addEventListener('click', function(e) {
+            // Create particles converging to button
+            for (let i = 0; i < 20; i++) {
+                createParticle(e.clientX, e.clientY);
+            }
+            
+            // Simulate form submission (would normally send data to server)
+            alert('您的信息已提交，我们将为您进行财富指引分析。');
+        });
+        
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            document.body.appendChild(particle);
+            
+            // Random position around the screen
+            const startX = Math.random() * window.innerWidth;
+            const startY = Math.random() * window.innerHeight;
+            
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            
+            // Animate to converge on the button
+            const animation = particle.animate([
+                {
+                    transform: 'translate(0, 0)',
+                    opacity: 0
+                },
+                {
+                    opacity: 0.8,
+                    offset: 0.3
+                },
+                {
+                    transform: `translate(${x - startX}px, ${y - startY}px)`,
+                    opacity: 0
+                }
+            ], {
+                duration: 1000 + Math.random() * 500,
+                easing: 'ease-out'
+            });
+            
+            animation.onfinish = () => {
+                particle.remove();
+            };
+        }
+    </script>
+</body>
+</html>
