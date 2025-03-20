@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运势报告详情</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 16px;
+            color: #333;
+            background: #032a67;
+            min-height: 100vh;
+            padding: 20px 16px;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .report-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            color: #c0ac38;
+            margin-bottom: 12px;
+            text-shadow: 1px 1px 2px rgba(212,175,55,0.3);
+        }
+        
+        .report-subtitle {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 18px;
+            color: #D4AF37;
+            text-shadow: 1px 1px 2px rgba(212,175,55,0.3);
+        }
+        
+        .section {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+             
+            box-shadow: 0 4px 12px rgba(42, 59, 77, 0.1);
+            border-left: 3px solid #2A3B4D;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .section-icon {
+            background-color: #D4AF37;
+            color: white;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+        }
+        
+        .section-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 20px;
+            color: #2A3B4D;
+            text-shadow: 1px 1px 2px rgba(212,175,55,0.3);
+        }
+        
+        .section-content {
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            color: #D4AF37;
+            font-weight: bold;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            margin: 16px 0;
+        }
+        
+        .warning-box {
+            background-color: rgba(255, 107, 53, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            display: flex;
+            align-items: flex-start;
+            border-left: 3px solid #FF6B35;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+            }
+        }
+        
+        .warning-icon {
+            color: #FF6B35;
+            margin-right: 12px;
+            animation: shake 2s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+            20%, 40%, 60%, 80% { transform: translateX(2px); }
+        }
+        
+        .warning-text {
+            flex: 1;
+        }
+        
+        .social-share {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(42, 59, 77, 0.1);
+        }
+        
+        .share-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 18px;
+            color: #2A3B4D;
+            margin-bottom: 16px;
+            text-shadow: 1px 1px 2px rgba(212,175,55,0.3);
+        }
+        
+        .share-text {
+            margin-bottom: 16px;
+            color: #555;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .btn {
+            background-color: #c0ac38;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+        }
+        
+        .btn .material-icons {
+            margin-right: 8px;
+        }
+        
+        .poster-preview {
+            width: 80%;
+            margin: 0 auto 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            height: 0;
+            padding-bottom: 150%; /* 2:3 aspect ratio */
+            background-color: #f5f5f5;
+            display: none;
+        }
+        
+        .poster-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(135deg, #F8F5E6 0%, #E3F2FD 100%);
+        }
+        
+        .poster-header {
+            text-align: center;
+        }
+        
+        .poster-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 20px;
+            color: #D4AF37;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 2px rgba(212,175,55,0.3);
+        }
+        
+        .poster-subtitle {
+            font-size: 14px;
+            color: #2A3B4D;
+        }
+        
+        .poster-image {
+            width: 60%;
+            margin: 16px auto;
+            height: 40%;
+            background-color: #2A3B4D;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .poster-footer {
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .qr-code {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            margin: 0 auto 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 80%;
+            max-width: 320px;
+            text-align: center;
+        }
+        
+        .modal-title {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 20px;
+            color: #2A3B4D;
+            margin-bottom: 16px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 24px;
+        }
+        
+        .modal-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .primary-btn {
+            background-color: #D4AF37;
+            color: white;
+            border: none;
+        }
+        
+        .secondary-btn {
+            background-color: transparent;
+            color: #2A3B4D;
+            border: 1px solid #2A3B4D;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="report-header">
+            <h1 class="report-title">命运解析报告</h1>
+            
+        </div>
+        
+        <!-- 运势章节 -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span class="material-icons">auto_awesome</span>
+                </div>
+                <h2 class="section-title">运势分析</h2>
+            </div>
+            <div class="section-content">
+                <p>本月整体运势<span class="highlight">稳中向上</span>，水星逆行即将结束，带来新的契机。特别是在月中旬，<span class="highlight">木星与金星相位</span>将为您带来难得的好机会。</p>
+                <p>三月是展示个人魅力的好时机，您的社交能力将达到巅峰，适合扩展人脉和寻求合作。然而，月底需注意<span class="highlight">火星冲日</span>的影响，可能导致情绪波动，建议保持冷静。</p>
+                <div class="chart-container" id="luckChart"></div>
+            </div>
+        </div>
+        
+        <!-- 财富章节 -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span class="material-icons">savings</span>
+                </div>
+                <h2 class="section-title">财富预测</h2>
+            </div>
+            <div class="section-content">
+                <p>本月财运整体处于<span class="highlight">上升期</span>，适合稳健投资和理财规划。第二周开始，土星的影响将带来稳定的收入增长。</p>
+                <p>本月最佳理财日期为<span class="highlight">3月8日和3月22日</span>，可用于重要的财务决策。投资方向以<span class="highlight">科技和健康产业</span>为宜。</p>
+                <div class="chart-container" id="wealthChart"></div>
+                <div class="warning-box">
+                    <span class="material-icons warning-icon">warning</span>
+                    <div class="warning-text">
+                        <p><strong>风险预警：</strong>月底冲日期间请避免做出重大财务决策，谨防冲动消费和高风险投资。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 健康章节 -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <span class="material-icons">favorite</span>
+                </div>
+                <h2 class="section-title">健康提示</h2>
+            </div>
+            <div class="section-content">
+                <p>本月健康状况良好，但仍需注意以下几点：</p>
+                <p>1. 月初容易出现<span class="highlight">睡眠质量下降</span>的情况，建议调整作息，保持充足睡眠。</p>
+                <p>2. 中旬起水星逆行结束，心理状态将明显改善，但仍需防范工作压力带来的负面影响。</p>
+                <p>3. 建议每周至少<span class="highlight">三次有氧运动</span>，增强心肺功能，提升免疫力。</p>
+                <div class="chart-container" id="healthChart"></div>
+            </div>
+        </div>
+        <br/><br/>
+        <button class="btn" id="downloadReportBtn">
+            <span class="material-icons">download</span>下载报告
+        </button>
+        <button class="btn" id="downloadReportBtn" style="float: right;margin-top:-45px">
+            <span class="material-icons">people</span>开运方法咨询
+        </button>
+        <!-- 社交分享组件 -->
+        <div class="social-share">
+            
+            <p class="share-text">恭喜你成功解锁命运密码,您已获得2个半价体验名额，快把好运分享给家人和好友吧！</p>
+            <div class="share-buttons">
+                <button class="btn" id="generatePosterBtn">
+                    <span class="material-icons">image</span>点击复制邀请链接，发送给好友
+                </button>
+               <!-- <button class="btn" id="downloadReportBtn">
+                    <span class="material-icons">download</span>下载报告
+                </button> -->
+            </div> 
+             
+        </div>
+    </div>
+    
+    <!-- 模态框 -->
+    <div class="modal" id="downloadModal">
+        <div class="modal-content">
+            <h3 class="modal-title">报告生成中</h3>
+            <p>您的命运解析报告正在生成PDF文件，请稍候...</p>
+            <div class="modal-buttons">
+                <button class="modal-btn secondary-btn" id="cancelDownloadBtn">取消</button>
+                <button class="modal-btn primary-btn" id="confirmDownloadBtn">确认下载</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 初始化图表
+        function initCharts() {
+            // 运势图表
+            const luckChart = echarts.init(document.getElementById('luckChart'));
+            const luckOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: '{b}: {c}'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['第一周', '第二周', '第三周', '第四周', '第五周']
+                },
+                yAxis: {
+                    type: 'value',
+                    max: 100,
+                    min: 0
+                },
+                series: [{
+                    data: [65, 70, 85, 80, 60],
+                    type: 'bar',
+                    itemStyle: {
+                        color: '#D4AF37'
+                    }
+                }]
+            };
+            luckChart.setOption(luckOption);
+            
+            // 财富图表
+            const wealthChart = echarts.init(document.getElementById('wealthChart'));
+            const wealthOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: '{b}: {c}'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['第一周', '第二周', '第三周', '第四周', '第五周']
+                },
+                yAxis: {
+                    type: 'value',
+                    max: 100,
+                    min: 0
+                },
+                series: [{
+                    data: [55, 75, 80, 85, 60],
+                    type: 'bar',
+                    itemStyle: {
+                        color: '#D4AF37'
+                    }
+                }]
+            };
+            wealthChart.setOption(wealthOption);
+            
+            // 健康图表
+            const healthChart = echarts.init(document.getElementById('healthChart'));
+            const healthOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: '{b}: {c}'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['第一周', '第二周', '第三周', '第四周', '第五周']
+                },
+                yAxis: {
+                    type: 'value',
+                    max: 100,
+                    min: 0
+                },
+                series: [{
+                    data: [70, 75, 80, 85, 75],
+                    type: 'bar',
+                    itemStyle: {
+                        color: '#D4AF37'
+                    }
+                }]
+            };
+            healthChart.setOption(healthOption);
+            
+            // 响应窗口大小变化
+            window.addEventListener('resize', function() {
+                luckChart.resize();
+                wealthChart.resize();
+                healthChart.resize();
+            });
+        }
+        
+        // 初始化交互功能
+        function initInteractions() {
+            const generatePosterBtn = document.getElementById('generatePosterBtn');
+            const downloadReportBtn = document.getElementById('downloadReportBtn');
+            const posterPreview = document.getElementById('posterPreview');
+            const downloadModal = document.getElementById('downloadModal');
+            const cancelDownloadBtn = document.getElementById('cancelDownloadBtn');
+            const confirmDownloadBtn = document.getElementById('confirmDownloadBtn');
+            
+            
+            
+            // 下载报告
+            downloadReportBtn.addEventListener('click', function() {
+                downloadModal.style.display = 'flex';
+            });
+            
+            // 取消下载
+            cancelDownloadBtn.addEventListener('click', function() {
+                downloadModal.style.display = 'none';
+            });
+            
+            // 确认下载
+            confirmDownloadBtn.addEventListener('click', function() {
+                // 模拟下载完成
+                downloadModal.style.display = 'none';
+                alert('报告下载成功！');
+            });
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            initInteractions();
+        });
+    </script>
+</body>
+</html>

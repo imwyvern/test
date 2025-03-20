@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>命理分析</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* 全局样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'HarmonyOS Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      color: #c0ac38;
+      background: #032a67;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    h1, h2, h3 {
+      font-family: 'Noto Serif SC', serif;
+      color: #c0ac38;
+      text-shadow: 1px 1px 2px rgba(212,175,55,0.3);
+      margin-bottom: 16px;
+    }
+    
+    /* 主按钮样式 */
+    .btn-primary {
+      background-color: #c0ac38;
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      margin: 16px 0;
+      box-shadow: #c0ac38;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* 输入框样式 */
+    .input-group {
+      margin-bottom: 16px;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #D4AF37;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* 八字命盘表格 */
+    .bazi-chart {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .bazi-chart th {
+      background-color: #2A3B4D;
+      color: #D4AF37;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .bazi-chart td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid rgba(42, 59, 77, 0.2);
+      font-weight: bold;
+    }
+    
+    /* 五行属性色块 */
+    .element-jin { background-color: #FFFFFF; color: #333; } /* 金 */
+    .element-mu { background-color: #57A773; color: white; } /* 木 */
+    .element-shui { background-color: #2A3B4D; color: white; } /* 水 */
+    .element-huo { background-color: #FF6B35; color: white; } /* 火 */
+    .element-tu { background-color: #FFC857; color: #333; } /* 土 */
+    
+    /* 进度条 */
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background-color: rgba(42, 59, 77, 0.1);
+      border-radius: 4px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(to right, #D4AF37, #B8860B);
+      animation: progress 3s ease-in-out forwards;
+    }
+    
+    @keyframes progress {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+    
+    /* 支付模块 */
+    .payment-section {
+      margin-top: 30px;
+      padding: 20px;
+      /*background-color: rgba(255, 255, 255, 0.4);*/
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      
+    }
+    
+    .timer-warning {
+      color: #FF6B35;
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
+    
+    .timer-warning .material-icons {
+      margin-right: 8px;
+    }
+    
+    /* 报告预览 */
+    .report-preview {
+      background-color: white;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .report-preview p {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    
+    .blur-content {
+      position: relative;
+    }
+    
+    .blur-content::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,0.8), rgba(255,255,255,0.8) 10px, rgba(220,220,220,0.8) 10px, rgba(220,220,220,0.8) 20px);
+    }
+    
+    /* 支付方式切换 */
+    .payment-methods {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .payment-method {
+      width: 60px;
+      height: 60px;
+      background-color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.5s ease;
+    }
+    
+    .payment-method.active {
+      border: 2px solid #D4AF37;
+      transform: rotateY(360deg);
+    }
+    
+    .payment-method img {
+      width: 36px;
+      height: 36px;
+    }
+    
+    /* 模态弹窗 */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      width: 90%;
+      max-width: 400px;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+    
+    /* 页面切换 */
+    .page {
+      display: none;
+    }
+    
+    .page.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 第一页 - 信息输入页 -->
+  <div class="page active" id="input-page">
+    <h1 style="text-align: center;">个人命运密码深度解析</h1>
+    <p style="text-align: center; margin-bottom: 24px; color: #ffffff;">探索您的命数，解析人生奥秘</p>
+    <img style="width: 80%;" src="header.jpg" />
+    <div class="input-group">
+      <label for="name">您的姓名</label>
+      <input type="text" id="name" class="input-field" placeholder="请输入姓名">
+    </div>
+    
+    <div class="input-group">
+      <label for="gender">性别</label>
+      <select id="gender" class="input-field">
+        <option value="">请选择</option>
+        <option value="male">男</option>
+        <option value="female">女</option>
+      </select>
+    </div>
+    
+    <div class="input-group">
+      <label for="birthdate">出生阳（公）历：年月日时</label>
+      <input type="date" id="birthdate" class="input-field">
+    </div>
+    
+   <!-- <div class="input-group">
+      <label for="birthtime">出生时辰</label>
+      <select id="birthtime" class="input-field">
+        <option value="">请选择</option>
+        <option value="zi">子时 (23:00-00:59)</option>
+        <option value="chou">丑时 (01:00-02:59)</option>
+        <option value="yin">寅时 (03:00-04:59)</option>
+        <option value="mao">卯时 (05:00-06:59)</option>
+        <option value="chen">辰时 (07:00-08:59)</option>
+        <option value="si">巳时 (09:00-10:59)</option>
+        <option value="wu">午时 (11:00-12:59)</option>
+        <option value="wei">未时 (13:00-14:59)</option>
+        <option value="shen">申时 (15:00-16:59)</option>
+        <option value="you">酉时 (17:00-18:59)</option>
+        <option value="xu">戌时 (19:00-20:59)</option>
+        <option value="hai">亥时 (21:00-22:59)</option>
+      </select>
+    </div>-->
+    
+ 
+    
+    <button class="btn-primary" onclick="showPage('result-page')">
+      <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">auto_awesome</span>躲避危机 马上预测
+    </button>
+  </div>
+  
+  <!-- 第二页 - 结果与支付页 -->
+  <div class="page" id="result-page">
+    <h1 style="text-align: center;">八字命盘分析</h1>
+    
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+    
+    <p style="text-align: center; margin-bottom: 20px;">命盘数据解析完成</p>
+    
+    <!-- 八字命盘表格 -->
+    <div style="overflow-x: auto;">
+      <table class="bazi-chart">
+        <thead>
+          <tr>
+            <th>八字</th>
+            <th>年柱</th>
+            <th>月柱</th>
+            <th>日柱</th>
+            <th>时柱</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>天干</td>
+            <td class="element-jin">甲</td>
+            <td class="element-mu">乙</td>
+            <td class="element-huo">丙</td>
+            <td class="element-shui">丁</td>
+          </tr>
+          <tr>
+            <td>地支</td>
+            <td class="element-tu">戌</td>
+            <td class="element-jin">申</td>
+            <td class="element-mu">寅</td>
+            <td class="element-huo">午</td>
+          </tr>
+          <tr>
+            <td>藏干</td>
+            <td>戊 辛 丁</td>
+            <td>庚 壬 戊</td>
+            <td>甲 丙 戊</td>
+            <td>丙 己 庚</td>
+          </tr>
+          <tr>
+            <td>纳音</td>
+            <td>山头火</td>
+            <td>泉中水</td>
+            <td>炉中火</td>
+            <td>天河水</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- 支付引导模块 -->
+    <div class="payment-section">
+      <div class="timer-warning">
+        <!--<span class="material-icons">timer</span>
+        距离下次流时变化还剩 14:23-->
+      </div>
+      
+      <h3>命理解析报告<br />
+        (含本人财富、事业、感情、健康、学业及流年运势详解)🔥</h3>
+      
+      <div class="report-preview">
+        <p>您的八字命盘显示您为【火土相生】之命格，主富贵之相。</p>
+        <p>今年流年逢水，对您的事业有所冲撞，需注意...</p>
+        <div class="blur-content">
+          <p>您的财运走势将在下一个季度出现明显转机，尤其在投资方面有意外收获。</p>
+          <p>感情上需留意木命异性，恐有波折，但终得良缘。</p>
+          <p>事业发展将遇贵人，应把握机会，展现才华。</p>
+        </div>
+      </div>
+      
+      <h3>选择支付方式</h3>
+      <div class="payment-methods">
+        <div class="payment-method active" onclick="switchPayment(this)">
+          <img src="/api/placeholder/60/60" alt="微信支付">
+        </div>
+        <div class="payment-method" onclick="switchPayment(this)">
+          <img src="/api/placeholder/60/60" alt="支付宝">
+        </div>
+      </div>
+      
+      <button  class="btn-primary">
+        
+        <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">lock</span>
+        <a style="color: #ffffff;" href="fortune-report-details.html" >"解锁完整报告 (💲48.00)</a>
+      </button>
+      <span class="material-icons">timer</span>
+        距离支付还剩下剩 14:23
+    </div>
+    
+    <button class="btn-primary" style="background: rgba(42, 59, 77, 0.7);" onclick="showPage('input-page')">
+      <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">arrow_back</span>返回修改信息
+    </button>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // 页面切换函数
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+      
+      // 如果切换到结果页，重置进度条动画
+      if(pageId === 'result-page') {
+        const progressBar = document.querySelector('.progress-bar');
+        progressBar.style.animation = 'none';
+        setTimeout(() => {
+          progressBar.style.animation = 'progress 3s ease-in-out forwards';
+        }, 10);
+      }
+    }
+    
+    // 支付方式切换
+    function switchPayment(element) {
+      document.querySelectorAll('.payment-method').forEach(method => {
+        method.classList.remove('active');
+      });
+      element.classList.add('active');
+    }
+  </script>
+</body>
+</html>
